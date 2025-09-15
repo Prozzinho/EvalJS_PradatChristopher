@@ -88,3 +88,14 @@ const usersXeno = [{
         longitude :  1.43222
     }
 ];
+
+const tabData = [];
+const tableauCopier = [usersHuman, usersPet, usersXeno];
+
+for (let i = 0; i < tableauCopier.length; i++){
+    tabData.push(tableauCopier[i]);
+}
+
+function cardHumain(objet){
+    
+}
