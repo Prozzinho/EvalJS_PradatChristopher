@@ -91,11 +91,110 @@ const usersXeno = [{
 
 const tabData = [];
 const tableauCopier = [usersHuman, usersPet, usersXeno];
+let sectionProfil = document.querySelector(".profils");
 
 for (let i = 0; i < tableauCopier.length; i++){
     tabData.push(tableauCopier[i]);
 }
 
 function cardHumain(objet){
-    
+    let articleEl = document.createElement("article");
+    let titreH2el = document.createElement("h2");
+    titreH2el.textContent = objet.name;
+    let imageEl = document.createElement("img");
+    imageEl.src = objet.avatar;
+    imageEl.alt = `Portrait de : ${objet.name}`;
+    let paragrapheEl = document.createElement("p");
+    paragrapheEl.textContent = `${objet.age} ans - ${objet.email}`;
+
+    sectionProfil.append(articleEl);
+    articleEl.append(titreH2el);
+    articleEl.append(imageEl);
+    articleEl.append(paragrapheEl);
+    articleEl.classList.add("card");
+
+    return articleEl;
 }
+
+
+function cardPet(objet){
+    let articleEl = document.createElement("article");
+    let titreH2el = document.createElement("h2");
+    titreH2el.textContent = objet.name;
+    let imageEl = document.createElement("img");
+    imageEl.src = objet.avatar;
+    imageEl.alt = `Portrait de : ${objet.name}`;
+    let paragrapheEl = document.createElement("p");
+    paragrapheEl.textContent = `${objet.age} ans - ${objet.espece} - Propriétaire : ${objet.propriétaire}`;
+
+    sectionProfil.append(articleEl);
+    articleEl.append(titreH2el);
+    articleEl.append(imageEl);
+    articleEl.append(paragrapheEl);
+    articleEl.classList.add("card");
+    return articleEl;
+}
+
+function cardXeno(objet) {
+    let articleEl = document.createElement("article");
+    let titreH2el = document.createElement("h2");
+    titreH2el.textContent = objet.name;
+    let imageEl = document.createElement("img");
+    imageEl.src = objet.avatar;
+    imageEl.alt = `Portrait de : ${objet.name}`;
+    let paragrapheEl = document.createElement("p");
+    paragrapheEl.textContent = `${objet.age} ans - ${objet.espece} - Menace : ${objet.menace}`;
+
+    sectionProfil.append(articleEl);
+    articleEl.append(titreH2el);
+    articleEl.append(imageEl);
+    articleEl.append(paragrapheEl);
+    articleEl.classList.add("card");
+    return articleEl;
+}
+
+function profil(tableau) {
+    let cardList = [];
+    for(let i = 0; i < tableau.length; i++){
+        if(tableau[i].type === "humain"){
+            cardList.push(cardHumain(tableau[i]));
+        }
+        else if(tableau[i].type === "animal de compagnie"){
+            cardList.push(cardPet(tableau[i]));
+        }
+        else if(tableau[i].type === "Xeno"){
+            cardList.push(cardXeno(tableau[i]));
+        }
+    }
+    return cardList;
+}
+
+function profilAll(tableau) {
+    for (let i = 0; i < tableau.length; i++) {
+        profil(tableau[i]);
+    }
+}
+
+profilAll(tabData);
+
+var map = L.map('map').setView([ 43.604429, 1.443812], 14);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  function markerProfil(profil){
+    const icon = L.icon({
+        iconUrl: profil.icon,
+        iconSize: [50,83],
+        iconAnchor: [25,83]
+    });
+    L.marker([profil.latitude, profil.longitude], { icon: icon }).addTo(map);
+  }
+
+  // Pour chaque groupe (humains, pets, xenos), ajouter un marker par profil
+  tabData.forEach((users) => {
+    users.forEach((user) => {
+      markerProfil(user);
+    });
+  });
